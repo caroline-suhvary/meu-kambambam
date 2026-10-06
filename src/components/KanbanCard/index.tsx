@@ -1,0 +1,13 @@
+"use client";
+import {useState} from 'react';import {Pencil,Trash2,Check,X} from 'lucide-react';
+import {request} from '@/features/boards';import Attachment from '@/components/Attachment';import {COLUMNS,type Card,type Attachment as AttachmentType} from '@/types';
+import './styles.css';
+// Filho recebe dados do pai por props; informa mudanças pelo callback onChanged.
+export default function KanbanCard({card,attachment,isPublic,canRemoveAttachment,onChanged,onError}:{card:Card;attachment?:AttachmentType;isPublic:boolean;canRemoveAttachment:boolean;onChanged:()=>void;onError:(s:string)=>void}){
+ const [editing,setEditing]=useState(false);const [title,setTitle]=useState(card.title);const [description,setDescription]=useState(card.description);const [busy,setBusy]=useState(false);
+ async function run(action:string,payload:Record<string,unknown>){setBusy(true);try{await request(action,{board:card.board_id,card:card.id,...payload});setEditing(false);onChanged();}catch(e){onError(e instanceof Error?e.message:'Falha no card.');}finally{setBusy(false);}}
+ return <article className="kanban-card"><div className="row card-actions"><span className="pin"/><button className="icon-button" title="Editar tarefa" aria-label="Editar tarefa" disabled={busy} onClick={()=>{setTitle(card.title);setDescription(card.description);setEditing(!editing);}}><Pencil/></button><button className="icon-button danger" title="Excluir tarefa" aria-label="Excluir tarefa" disabled={busy || (!!attachment && !canRemoveAttachment)} onClick={()=>{if(confirm('Excluir tarefa e seu anexo?'))void run('delete_card',{});}}><Trash2/></button></div>
+ {editing?<form className="stack" onSubmit={e=>{e.preventDefault();void run('edit_card',{title,description});}}><input required maxLength={200} value={title} onChange={e=>setTitle(e.target.value)}/><textarea maxLength={4000} value={description} onChange={e=>setDescription(e.target.value)}/><div className="row"><button className="icon-button" title="Salvar" aria-label="Salvar" disabled={busy}><Check/></button><button className="icon-button" type="button" title="Cancelar" aria-label="Cancelar" onClick={()=>setEditing(false)}><X/></button></div></form>:<><h3>{card.title}</h3>{card.description&&<p>{card.description}</p>}</>}
+ <select aria-label={`Coluna de ${card.title}`} value={card.column_key} disabled={busy} onChange={e=>void run('edit_card',{column:e.target.value})}>{COLUMNS.map(c=><option key={c.key} value={c.key}>{c.label}</option>)}</select>
+ <Attachment attachment={attachment} board={card.board_id} card={card.id} isPublic={isPublic} canRemove={canRemoveAttachment} onChanged={onChanged} onError={onError}/></article>;
+}

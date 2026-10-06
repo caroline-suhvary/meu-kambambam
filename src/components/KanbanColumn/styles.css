@@ -1,0 +1,1 @@
+.kanban-column{min-width:0}.kanban-column>header{display:flex;align-items:center;justify-content:space-between;border-top:7px solid var(--accent);margin-bottom:14px}.kanban-column h2{font-size:15px}.kanban-column header span{font-size:13px;color:var(--muted)}

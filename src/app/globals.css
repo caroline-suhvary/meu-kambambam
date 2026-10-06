@@ -1,0 +1,146 @@
+@import "tailwindcss";
+:root {
+  --background: #f4f5f7;
+  --surface: #fff;
+  --foreground: #24282b;
+  --muted: #626b73;
+  --border: #d5d9dc;
+  --accent: #eed05b;
+  --primary: #195c60;
+  --on-primary: #fff;
+  --danger: #a32c35;
+  --note-1: #f8e995;
+  --note-2: #c4e5dc;
+  --note-3: #edd0df;
+  --note-4: #cfdbf4;
+  --shadow: 0 3px 8px #24282b12;
+}
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: 0;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+button {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+button.primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+button.danger {
+  color: var(--danger);
+}
+input,
+textarea,
+select {
+  padding: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+  border-radius: 4px;
+  max-width: 100%;
+}
+label {
+  display: grid;
+  gap: 5px;
+  font-size: 14px;
+}
+a {
+  color: var(--primary);
+  overflow-wrap: anywhere;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.stack {
+  display: grid;
+  gap: 12px;
+}
+.error {
+  color: var(--danger);
+}
+.muted {
+  color: var(--muted);
+}
+.notice {
+  border-left: 4px solid var(--accent);
+  padding: 12px;
+  background: var(--surface);
+}
+dialog {
+  max-width: min(520px, 94vw);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+h1 {
+  font-size: 28px;
+}
+h2 {
+  font-size: 20px;
+}
+h3 {
+  font-size: 16px;
+}
+small {
+  font-size: 12px;
+}
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+}
+.icon-button svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Paleta exclusiva do título. */
+:root {
+  --titulo-rosa: #bd3862;
+  --titulo-azul: #2767b0;
+  --titulo-verde: #237d65;
+  --titulo-laranja: #b85a16;
+  --titulo-violeta: #8052a3;
+}

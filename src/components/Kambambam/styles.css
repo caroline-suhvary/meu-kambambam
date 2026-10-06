@@ -1,0 +1,102 @@
+.workspace {
+  max-width: 1440px;
+  margin: auto;
+  padding: 28px;
+}
+.workspace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 10px solid var(--accent);
+  padding-bottom: 15px;
+  flex-wrap: wrap;
+}
+.workspace-header h1 {
+  margin: 4px 0;
+}
+.eyebrow {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+}
+.toolbar {
+  padding: 20px 0;
+}
+.toolbar label {
+  min-width: 200px;
+}
+.board-summary {
+  justify-content: space-between;
+}
+.new-card {
+  margin-top: 15px;
+}
+.new-card input {
+  flex: 1;
+  min-width: 120px;
+}
+.new-card button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.group-section {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.group-section ul {
+  padding-left: 20px;
+}
+.group-section li {
+  margin: 8px 0;
+}
+.group-section li button {
+  margin-left: 10px;
+  font-size: 12px;
+}
+.workspace-footer {
+  margin-top: 40px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 580px) {
+  .workspace {
+    padding: 16px;
+  }
+  .workspace-header h1 {
+    font-size: 24px;
+  }
+  .toolbar label {
+    width: 100%;
+  }
+}
+
+/* Mais específico que o tamanho antigo do título. */
+.workspace-header h1.titulo-colorido {
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 8px 0;
+}
+
+.titulo-letra {
+  white-space: pre;
+}
+
+.titulo-cor-0 {
+  color: var(--titulo-rosa);
+}
+.titulo-cor-1 {
+  color: var(--titulo-azul);
+}
+.titulo-cor-2 {
+  color: var(--titulo-verde);
+}
+.titulo-cor-3 {
+  color: var(--titulo-laranja);
+}
+.titulo-cor-4 {
+  color: var(--titulo-violeta);
+}
