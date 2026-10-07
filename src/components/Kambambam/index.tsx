@@ -147,12 +147,21 @@ export default function Kambambam() {
       </header>
       {authOpen && <AuthForm onClose={() => setAuthOpen(false)} />}
       {state?.board.kind === "public" && (
-        <p className="notice">
-          Demonstração compartilhada: qualquer visitante pode alterar e excluir
-          tarefas e anexos de outras pessoas. Não envie informações pessoais.
-          Até 5 anexos no quadro; 1 por tarefa; PDF, PNG e links. Arquivos até 1
-          MB.
-        </p>
+        <div className="notice text-xs">
+          <p>
+            Demonstrativo: Qualquer visitante pode criar, alterar e excluir
+            tarefas e anexos que estão na demonstração pública abaixo.
+          </p>
+          <p>
+            Não envie informações pessoais. Até 5 anexos no quadro; 1 por
+            tarefa; PDF, PNG e links. Arquivos até 1 MB.
+          </p>
+          <p>
+            Para criar seu kanban privado ou um grupo privado, clique no botão
+            acima para cadastar. Caso você já tenha uma conta, clique no botão
+            acima para acessar.
+          </p>
+        </div>
       )}
       <div className="toolbar row">
         <label>
