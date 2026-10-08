@@ -100,3 +100,8 @@
 .titulo-cor-4 {
   color: var(--titulo-violeta);
 }
+
+/* As ações ficam no topo da seção de participantes, sem mudar o quadro. */
+.group-actions { margin-bottom: 12px; }
+.group-actions button { display: inline-flex; align-items: center; gap: 6px; }
+.group-section li { overflow-wrap: anywhere; }

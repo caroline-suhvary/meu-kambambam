@@ -11,11 +11,19 @@ const fonteTitulo = Leckerli_One({
 
 import { useCallback, useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw, Pencil, Trash2, LogOut } from "lucide-react";
 import { browserClient } from "@/lib/browser";
 import { request } from "@/features/boards";
 import { signOut } from "@/features/auth";
-import { inviteMember, acceptInvite, removeMember } from "@/features/groups";
+import {
+  inviteMember,
+  acceptInvite,
+  removeMember,
+  renameGroup,
+  deleteGroup,
+  leaveGroup,
+  retryGroupCleanup,
+} from "@/features/groups";
 import AuthForm from "@/components/AuthForm";
 import KanbanBoard from "@/components/KanbanBoard";
 import type { Board, Snapshot } from "@/types";
@@ -34,6 +42,7 @@ export default function Kambambam() {
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
   const [title, setTitle] = useState("");
+  const [cleanupWarning, setCleanupWarning] = useState("");
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
@@ -184,6 +193,19 @@ export default function Kambambam() {
             <button disabled={busy} onClick={() => void create("group")}>
               Criar grupo
             </button>
+            <button
+              className="icon-button"
+              disabled={busy}
+              title="Limpar arquivos pendentes de grupos excluídos"
+              aria-label="Limpar arquivos pendentes de grupos excluídos"
+              onClick={() =>
+                void run(async () => {
+                  await retryGroupCleanup();
+                  setCleanupWarning("");
+                })
+              }>
+              <Trash2 size={16} />
+            </button>
           </>
         )}
         <button
@@ -211,6 +233,21 @@ export default function Kambambam() {
           <button onClick={() => void refresh()}>Tentar novamente</button>
         </div>
       )}
+      {cleanupWarning && (
+        <div className="notice" role="status">
+          {cleanupWarning}
+          <button
+            disabled={busy}
+            onClick={() =>
+              void run(async () => {
+                await retryGroupCleanup();
+                setCleanupWarning("");
+              })
+            }>
+            Tentar limpar arquivos
+          </button>
+        </div>
+      )}
       {loading && !state && <p role="status">Carregando tarefas…</p>}
       {state && (
         <>
@@ -232,6 +269,66 @@ export default function Kambambam() {
           </div>
           {state.board.kind === "group" && (
             <section className="group-section">
+              {/* As ações são visíveis conforme o papel; a API/SQL também
+                  verifica as permissões, pois esconder botão não é segurança. */}
+              <div className="row group-actions">
+                {state.board.owner_id === user?.id ? (
+                  <>
+                    <button
+                      disabled={busy}
+                      onClick={() => {
+                        const name = prompt(
+                          "Novo nome do grupo",
+                          state.board.title,
+                        );
+                        if (name?.trim())
+                          void run(() =>
+                            renameGroup(state.board.id, name.trim()),
+                          );
+                      }}>
+                      <Pencil size={16} /> Alterar nome
+                    </button>
+                    <button
+                      className="danger"
+                      disabled={busy}
+                      onClick={() => {
+                        if (
+                          !confirm(
+                            `Excluir o grupo “${state.board.title}”? Todas as tarefas, convites, links e arquivos deste grupo serão apagados. Esta ação não pode ser desfeita.`,
+                          )
+                        )
+                          return;
+                        void run(async () => {
+                          const result = await deleteGroup(state.board.id);
+                          setCleanupWarning(result.warning ?? "");
+                          // O pai troca para a demonstração: o quadro excluído
+                          // não pode continuar selecionado na lista.
+                          setSelected(PUBLIC_ID);
+                        });
+                      }}>
+                      <Trash2 size={16} /> Excluir grupo
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="danger"
+                    disabled={busy}
+                    onClick={() => {
+                      if (
+                        confirm(
+                          "Sair deste grupo? Você perderá o acesso. Remova seus anexos e links antes; suas tarefas permanecerão no grupo.",
+                        )
+                      ) {
+                        void run(async () => {
+                          await leaveGroup(state.board.id);
+                          setSelected(PUBLIC_ID);
+                        });
+                      }
+                    }}>
+                    <LogOut size={16} /> Sair do grupo
+                  </button>
+                )}
+              </div>
               <div className="row">
                 <h3>Participantes ({state.members.length}/4 vagas)</h3>
                 {state.board.owner_id === user?.id && (
